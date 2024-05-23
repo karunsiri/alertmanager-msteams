@@ -20,7 +20,7 @@
                 "type": "TextBlock",
                 "size": "Medium",
                 "weight": "Bolder",
-                "text": "{{ .Status }}: {{ .CommonLabels.alertname }}",
+                "text": "{{ .CommonLabels.alertname }} ({{ .Status }})",
                 "color": "{{- if eq .Status "resolved" -}}good
                     {{- else if eq .Status "firing" -}}
                       {{- if eq .CommonLabels.severity "critical" -}}attention
@@ -44,6 +44,7 @@
                 {
                   "type": "TextBlock",
                   "weight": "Bolder",
+                  "color": "accent",
                   "text": "{{ $alert.Annotations.summary }}",
                   "wrap": true
                 },

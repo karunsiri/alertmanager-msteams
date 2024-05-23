@@ -92,6 +92,12 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf(
+		"Receive alert: %s (%s)\n",
+		payload.CommonLabels["alertname"],
+		payload.Status,
+	)
+
 	// Load the template file with the custom function map
 	extraFunctions := template.FuncMap{
 		"shouldInclude":   shouldInclude,
@@ -115,15 +121,6 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 	// Send the rendered template to Microsoft Teams webhook
 	webhookURL := os.Getenv("WEBHOOK_URL")
 
-	// log.Println(webhookURL)
-	// // log.Printf("%v\n", renderedTemplate)
-	// resp, err := http.Post(webhookURL, "application/json", &renderedTemplate)
-	// if err != nil || resp.StatusCode != http.StatusOK {
-	// 	log.Printf("Unable to send to Teams: %v", resp)
-	// 	http.Error(w, "Unable to send to Teams webhook", http.StatusInternalServerError)
-	// 	return
-	// }
-
 	resp, err := http.Post(webhookURL, "application/json", &renderedTemplate)
 	if err != nil {
 		log.Printf("Error sending to Teams webhook: %v", err)
@@ -139,6 +136,7 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("Successfully forwarded %s (%s)\n", payload.CommonLabels["alertname"], payload.Status)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Alert forwarded to Teams"))
 }

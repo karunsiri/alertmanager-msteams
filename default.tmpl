@@ -1,0 +1,92 @@
+{
+  "type":"message",
+  "attachments": [
+    {
+      "contentType":"application/vnd.microsoft.card.adaptive",
+      "contentUrl":null,
+      "content": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "version": "1.6",
+        "msteams": {
+          "width": "full"
+        },
+        "body": [
+          {
+            "type": "Container",
+            "style": "emphasis",
+            "items": [
+              {
+                "type": "TextBlock",
+                "size": "Medium",
+                "weight": "Bolder",
+                "text": "{{ .Status }}: {{ .CommonLabels.alertname }}",
+                "color": "{{- if eq .Status "resolved" -}}good
+                    {{- else if eq .Status "firing" -}}
+                      {{- if eq .CommonLabels.severity "critical" -}}attention
+                      {{- else if eq .CommonLabels.severity "warning" -}}warning
+                      {{- else -}}default{{- end -}}
+                    {{- else -}}default{{- end -}}"
+              }
+            ]
+          },
+          {{- range $alertIndex, $alert := .Alerts -}}
+            {{- if $alertIndex }},{{ end }}
+            {
+              "type": "Container",
+              "items": [
+                {{- if $alertIndex -}}
+                {
+                  "type": "TextBlock",
+                  "text": "---"
+                },
+                {{- end -}}
+                {
+                  "type": "TextBlock",
+                  "weight": "Bolder",
+                  "text": "{{ $alert.Annotations.summary }}",
+                  "wrap": true
+                },
+                {
+                  "type": "TextBlock",
+                  "spacing": "None",
+                  "text": "{{ $alert.StartsAt | formatTimestamp }}",
+                  "isSubtle": true,
+                  "wrap": true
+                },
+                {
+                  "type": "TextBlock",
+                  "text": "{{ $alert.Annotations.description }}",
+                  "wrap": true
+                },
+                {
+                  "type": "FactSet",
+                  "facts": [
+                    {{- $firstLabel := true -}}
+                    {{- range $key, $value := $alert.Labels -}}
+                      {{- if shouldInclude $key -}}
+                        {{- if not $firstLabel }},{{ end }}
+                        {{- $firstLabel = false -}}
+                        {
+                          "title": "{{ $key }}",
+                          "value": "{{ $value }}"
+                        }
+                      {{- end -}}
+                    {{- end -}}
+                  ]
+                }
+              ]
+            }
+          {{- end -}}
+        ],
+        "actions": [
+          {
+            "type": "Action.OpenUrl",
+            "title": "View in Prometheus",
+            "url": "{{ .ExternalURL }}"
+          }
+        ]
+      }
+    }
+  ]
+}

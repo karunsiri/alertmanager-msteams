@@ -20,7 +20,9 @@ func main() {
 	flag.Parse()
 
 	if *excludedLabelsArg != "" {
-		excludedLabels = strings.Split(*excludedLabelsArg, ",")
+		trimmedLabels := strings.Trim(*excludedLabelsArg, `"'`)
+		excludedLabels = strings.Split(trimmedLabels, ",")
+		log.Println("Exclude Labels:", excludedLabels)
 	}
 	webhookURL = os.Getenv("WEBHOOK_URL")
 

@@ -18,9 +18,9 @@
             "items": [
               {
                 "type": "TextBlock",
-                "size": "Medium",
+                "size": "Large",
                 "weight": "Bolder",
-                "text": "{{ .CommonLabels.alertname }} ({{ .Status }})",
+                "text": "{{ .CommonLabels.alertname }} ({{ .Status | titleize }})",
                 "color": "{{- if eq .Status "resolved" -}}good
                     {{- else if eq .Status "firing" -}}
                       {{- if eq .CommonLabels.severity "critical" -}}attention

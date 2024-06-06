@@ -36,6 +36,6 @@ func formatTimestampWithOffset(t time.Time, offsetMinutes int) string {
 }
 
 // replaceAll replaces all occurrences of old with new in the input string
-func replaceAll(string, before, after string) string {
-	return strings.ReplaceAll(string, before, after)
+func replaceAll(input, before, after string) string {
+	return strings.ReplaceAll(input, before, after)
 }

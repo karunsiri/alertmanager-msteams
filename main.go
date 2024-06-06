@@ -56,10 +56,13 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Load the template file with the custom function map
 	extraFunctions := template.FuncMap{
-		"formatTimestamp": formatTimestamp,
-		"shouldInclude":   shouldInclude,
-		"titleize":        titleize,
+		"formatTimestamp":           formatTimestamp,
+		"formatTimestampWithOffset": formatTimestampWithOffset,
+		"replaceAll":                replaceAll,
+		"shouldInclude":             shouldInclude,
+		"titleize":                  titleize,
 	}
+
 	tmpl, err := template.New("default.tmpl").Funcs(extraFunctions).ParseFiles(templatePath)
 	if err != nil {
 		log.Printf("Error loading template: %v", err)

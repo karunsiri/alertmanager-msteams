@@ -29,3 +29,13 @@ func titleize(s string) string {
 	}
 	return strings.ToUpper(string(s[0])) + s[1:]
 }
+
+// Usage: {{ .StartsAt | formatTimestampWithOffset -10 }}
+func formatTimestampWithOffset(t time.Time, offsetMinutes int) string {
+	return t.Add(time.Duration(offsetMinutes) * time.Minute).Format(timeFormat)
+}
+
+// replaceAll replaces all occurrences of old with new in the input string
+func replaceAll(string, before, after string) string {
+	return strings.ReplaceAll(string, before, after)
+}

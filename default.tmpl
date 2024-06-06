@@ -76,16 +76,21 @@
                     {{- end -}}
                   ]
                 }
+                {{- if $alert.Annotations.external_url -}},
+                {
+                  "type": "ActionSet",
+                  "actions": [
+                    {
+                      "type": "Action.OpenUrl",
+                      "title": "View logs",
+                      "url": "{{ $alert.Annotations.external_url | replaceAll `#{{` `{{` | replaceAll `}}#` `}}` }} "
+                    }
+                  ]
+                }
+                {{- end -}}
               ]
             }
           {{- end -}}
-        ],
-        "actions": [
-          {
-            "type": "Action.OpenUrl",
-            "title": "View in Prometheus",
-            "url": "{{ .ExternalURL }}"
-          }
         ]
       }
     }

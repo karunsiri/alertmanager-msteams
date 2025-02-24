@@ -83,9 +83,9 @@ func alertHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		log.Printf("Error response from Teams webhook: %s", bodyBytes)
+		log.Printf("Error response from Teams webhook(%v): %s", resp.StatusCode, bodyBytes)
 		http.Error(w, "Unable to send to Teams webhook", http.StatusInternalServerError)
 		return
 	}
